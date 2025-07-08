@@ -15,10 +15,11 @@ $meusPedidos = array_filter($pedidos, fn($p) => $p['usuario'] === $usuario);
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../assets/estilo-status.css">
   <title>Status dos Pedidos</title>
 </head>
 <body>
+  <div class="pedido">
   <h2>📦 Pedidos de <?php echo htmlspecialchars($usuario); ?></h2>
 
   <?php if (empty($meusPedidos)): ?>
@@ -47,6 +48,8 @@ $meusPedidos = array_filter($pedidos, fn($p) => $p['usuario'] === $usuario);
     <?php endforeach; ?>
   <?php endif; ?>
 
+  
+  </div>
   <a href="menu.php">🍔 Voltar ao Menu</a>
 </body>
 </html>

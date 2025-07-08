@@ -1,4 +1,4 @@
-<?php
+    <?php
 session_start();
 
 if (!isset($_SESSION['usuario']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -41,4 +41,8 @@ file_put_contents($arquivoPedidos, json_encode($pedidos, JSON_PRETTY_PRINT));
 
 unset($_SESSION['carrinho']);
 
-echo "✅ Pedido registrado com sucesso! <a href='../pages/menu.php'>Fazer novo pedido</a> | <a href='../pages/status.php'>Ver status</a>";
+echo "
+<h1>✅ Pedido registrado com sucesso! <a href='../pages/menu.php'>Fazer novo pedido</a> | <a href='../pages/status.php'>Ver status</a></h1>;
+"
+
+?>

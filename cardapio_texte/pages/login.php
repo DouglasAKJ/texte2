@@ -18,11 +18,11 @@ if (isset($_GET['erro'])) {
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../assets/estilo-login.css">
   <title>Login</title>
 </head>
 <body>
-  <h2>🔑 Login</h2>
+  <h2>Login</h2>
   <?php if (isset($mensagem)) echo "<p style='color:red;'>$mensagem</p>"; ?>
   <form method="POST" action="../scripts/processa_login.php">
     <input type="text" name="usuario" placeholder="Usuário" required><br>
@@ -30,6 +30,6 @@ if (isset($_GET['erro'])) {
     <button type="submit">Entrar</button>
   </form>
   <br>
-  <a href="cadastro.php">Criar nova conta</a>
+  <button onclick="window.location.href='cadastro.php'">Criar nova conta</button>
 </body>
 </html>

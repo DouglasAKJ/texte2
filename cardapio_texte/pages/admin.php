@@ -22,17 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../assets/estilo-admin.css">
   <title>Painel Admin</title>
 </head>
 <body>
+  <div class="centralizar">
   <h2>🧾 Painel de Pedidos</h2>
+  </div>
 
   <?php if (empty($pedidos)): ?>
     <p>Nenhum pedido registrado.</p>
   <?php else: ?>
     <?php foreach (array_reverse($pedidos, true) as $i => $pedido): ?>
-      <div style="border:1px solid #aaa; margin: 15px auto; padding: 15px; max-width:600px;">
+      <div class="card-pedido">
         <strong>Cliente:</strong> <?= htmlspecialchars($pedido['usuario']) ?><br>
         <strong>Data:</strong> <?= $pedido['data'] ?><br>
         <strong>Tipo:</strong> <?= $pedido['entrega'] ?><br>
@@ -59,10 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li><?= $item['quantidade'] ?>× <?= $item['produto']['nome'] ?> (R$ <?= number_format($item['produto']['preco'], 2, ',', '.') ?>)</li>
           <?php endforeach; ?>
         </ul>
+        
       </div>
     <?php endforeach; ?>
   <?php endif; ?>
+  <div class="centralizar">
+  <button onclick="menu.php"><a href="menu.php">Voltar ao Menu</a></button>
+  </div>
+  
 
-  <a href="menu.php">Voltar ao Menu</a>
+  
 </body>
 </html>

@@ -1,0 +1,170 @@
+/* CARRINHO DE COMPRAS */
+
+
+:root {
+  --laranja: #ff6f00;
+  --amarelo: #ffd54f;
+  --preto: #121212;
+  --cinza-escuro: #1e1e1e;
+  --branco: #ffffff;
+  --cinza-claro: #f5f5f5;
+  --fonte: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Container principal da página */
+body {
+  background-color: var(--preto);
+  color: var(--branco);
+  font-family: var(--fonte);
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Título principal */
+h2 {
+  color: var(--laranja);
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+/* Mensagem de carrinho vazio */
+p {
+  color: var(--amarelo);
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Link para voltar ao menu */
+a {
+  color: var(--branco);
+  background-color: var(--laranja);
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+a:hover {
+  background-color: var(--amarelo);
+  color: var(--preto);
+}
+
+/* Formulário */
+form {
+  background-color: var(--cinza-escuro);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(255, 111, 0, 0.2);
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+th {
+  background-color: var(--laranja);
+  color: var(--branco);
+  padding: 16px;
+  text-align: center;
+  font-size: 16px;
+}
+
+td {
+  background-color: var(--preto);
+  color: var(--branco);
+  padding: 14px;
+  text-align: center;
+  border-top: 1px solid var(--cinza-escuro);
+}
+
+/* Inputs */
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid var(--laranja);
+  border-radius: 6px;
+  background-color: var(--preto);
+  color: var(--branco);
+  width: 100%;
+  max-width: 400px;
+}
+
+input::placeholder {
+  color: #cccccc;
+}
+
+/* Campo de endereço escondido inicialmente */
+#campo-endereco {
+  width: 100%;
+  display: none;
+  text-align: center;
+}
+
+/* Radios de entrega */
+label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--branco);
+  font-size: 16px;
+}
+
+/* Botões */
+button {
+  background-color: var(--laranja);
+  color: var(--branco);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--amarelo);
+  color: var(--preto);
+}
+
+/* Botões agrupados */
+form button + button {
+  margin-left: 10px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  table, th, td {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  form {
+    padding: 20px;
+  }
+
+  input[type="text"] {
+    max-width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  form button + button {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

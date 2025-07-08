@@ -12,10 +12,11 @@ $total = 0.0;
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../assets/estilo-carrinho.css">
   <title>Carrinho de Compras</title>
 </head>
 <body>
+  <div class="container-principal">
   <h2>🛒 Seu Carrinho</h2>
 
   <?php if (empty($carrinho)): ?>
@@ -63,9 +64,12 @@ $total = 0.0;
       </div>
 
       <br><br>
+      <div class="botoes-inferiores">
       <button type="submit" name="acao" value="confirmar">✅ Confirmar Pedido</button>
       <button type="submit" name="acao" value="cancelar">❌ Cancelar</button>
     </form>
+      </div>
+    </div>
 
     <script>
       const radioDelivery = document.querySelector('input[value="delivery"]');

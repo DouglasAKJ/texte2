@@ -1,0 +1,109 @@
+/* ====== Painel Admin (Reforçado com a paleta) ====== */
+
+.card-pedido {
+  background-color: var(--preto);
+  border: 2px solid var(--laranja);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 25px auto;
+  max-width: 650px;
+  box-shadow: 0 4px 12px rgba(255, 111, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.centralizar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-pedido:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 18px rgba(255, 111, 0, 0.4);
+}
+
+/* Título de seção */
+h2 {
+  color: var(--laranja);
+  font-size: 26px;
+  margin-bottom: 30px;
+}
+
+/* Infos do pedido */
+.card-pedido strong {
+  color: var(--amarelo);
+}
+
+.card-pedido hr {
+  border: 0;
+  border-top: 1px solid var(--laranja);
+  margin: 15px 0;
+}
+
+.card-pedido ul {
+  list-style: none;
+  padding-left: 0;
+  text-align: left;
+  background-color: var(--cinza-escuro);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.card-pedido li {
+  margin: 6px 0;
+  color: var(--branco);
+}
+
+/* Formulário e status */
+.card-pedido form {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.card-pedido select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--amarelo);
+  background-color: var(--preto);
+  color: var(--amarelo);
+  font-weight: bold;
+  transition: border-color 0.3s;
+}
+
+.card-pedido select:focus {
+  border-color: var(--laranja);
+  outline: none;
+}
+
+/* Botão de atualizar */
+.card-pedido button {
+  background-color: var(--laranja);
+  color: var(--branco);
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card-pedido button:hover {
+  background-color: var(--amarelo);
+  color: var(--preto);
+}
+
+/* Link "Voltar ao Menu" */
+body > a {
+  margin-top: 30px;
+  font-weight: bold;
+  color: var(--amarelo);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+body > a:hover {
+  color: var(--laranja);
+}

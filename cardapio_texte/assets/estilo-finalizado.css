@@ -1,0 +1,68 @@
+:root {
+  --laranja: #ff6f00;
+  --amarelo: #ffd54f;
+  --preto: #121212;
+  --cinza-escuro: #1e1e1e;
+  --branco: #ffffff;
+  --fonte: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--fonte);
+}
+
+/* Estilo da página */
+body {
+  background-color: var(--preto);
+  color: var(--branco);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Container de conteúdo */
+.conteudo-central {
+  max-width: 600px;
+  padding: 40px;
+  background-color: var(--cinza-escuro);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(255, 111, 0, 0.2);
+}
+
+/* Título principal */
+h1, h2 {
+  color: var(--laranja);
+  margin-bottom: 20px;
+}
+
+/* Texto adicional */
+p {
+  color: var(--branco);
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Links */
+a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: var(--laranja);
+  color: var(--branco);
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+a:hover {
+  background-color: var(--amarelo);
+  color: var(--preto);
+}

@@ -1,0 +1,103 @@
+/* Paleta de Cores */
+:root {
+  --laranja: #ff6f00;
+  --amarelo: #ffca28;
+  --preto: #1c1c1c;
+  --branco: #ffffff;
+}
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--preto);
+  color: var(--branco);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Título */
+h1, h2 {
+  margin-bottom: 20px;
+  color: var(--laranja);
+}
+
+/* Links principais (index) */
+a {
+  color: var(--preto);
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 10px;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--laranja);
+}
+
+/* Formulário */
+form {
+  background-color: #2b2b2b;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 108, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input[type="text"],
+input[type="password"] {
+  padding: 10px;
+  border: 1px solid var(--laranja);
+  border-radius: 5px;
+  background-color: var(--preto);
+  color: var(--branco);
+}
+
+input::placeholder {
+  color: #bbb;
+}
+
+/* Botões */
+button {
+  padding: 10px;
+  background-color: var(--laranja);
+  color: var(--branco);
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: var(--amarelo);
+  color: var(--preto);
+}
+
+/* Mensagem de erro */
+p {
+  color: #ff4444;
+  margin-bottom: 10px;
+}
+
+/* Responsivo básico */
+@media (max-width: 500px) {
+  body {
+    padding: 10px;
+  }
+
+  form {
+    width: 100%;
+  }
+}
