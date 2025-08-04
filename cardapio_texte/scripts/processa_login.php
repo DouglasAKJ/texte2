@@ -1,22 +1,38 @@
 <?php
 session_start();
+require_once "../src/database/Database.php";
 
-$usuario = $_POST['usuario'];
-$senha = $_POST['senha'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+    $db = new Database();
 
-$arquivo = '../data/usuarios.json';
-if (!file_exists($arquivo)) {
-    die("⚠️ Arquivo de usuários não encontrado.");
-}
+    // Busca o usuário pelo email
+    $sql = "SELECT * FROM usuarios WHERE email = ?";
+    $usuarios = $db->select($sql, [$email]);
 
-$dados = json_decode(file_get_contents($arquivo), true);
+    if (empty($usuarios)) {
+        // Email não encontrado
+        header("Location: ../pages/login.php");
+        exit;
+    }
 
-if (isset($dados[$usuario]) && password_verify($senha, $dados[$usuario])) {
-    $_SESSION['usuario'] = $usuario;
-    header('Location: ../pages/menu.php');
-    exit;
-} else {
-    header('Location: ../pages/login.php?erro=1');
-    exit;
+    $usuario = $usuarios[0]; // Primeiro resultado
+
+    if (password_verify($senha, $usuario->senha)) {
+        // Senha correta — salva na sessão
+        $_SESSION['usuario'] = [
+            'id' => $usuario->id,
+            'nome' => $usuario->nome,
+            'email' => $usuario->email
+        ];
+
+        header("Location: ../pages/menu.php"); // redireciona para a página protegida
+        exit;
+    } else {
+        // Senha incorreta
+        header("Location: ../pages/login.php");
+        exit;
+    }
 }
 ?>

@@ -15,7 +15,7 @@ $produtos = json_decode(file_get_contents('../data/produtos.json'), true);
 </head>
 <body>
   <main class="container-principal">
-    <h2>Olá, <?php echo htmlspecialchars($_SESSION['usuario']); ?>! Escolha seu pedido:</h2>
+    <h2>Olá, <?php echo htmlspecialchars($_SESSION['usuario']['nome']); ?>! Escolha seu pedido:</h2>
 
     <form method="POST" action="../scripts/adicionar_ao_carrinho.php">
       <table cellpadding="10">

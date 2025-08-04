@@ -25,7 +25,7 @@ if (isset($_GET['erro'])) {
   <h2>Login</h2>
   <?php if (isset($mensagem)) echo "<p style='color:red;'>$mensagem</p>"; ?>
   <form method="POST" action="../scripts/processa_login.php">
-    <input type="text" name="usuario" placeholder="Usuário" required><br>
+    <input type="text" name="email" placeholder="Email" required><br>
     <input type="password" name="senha" placeholder="Senha" required><br>
     <button type="submit">Entrar</button>
   </form>

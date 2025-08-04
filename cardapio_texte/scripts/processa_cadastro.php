@@ -11,16 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $db = new Database();
 
-    $sql = 'SELECT * FROM usuarios';
+    $sql = 'SELECT * FROM usuarios WHERE email = ?';
 
     $lista_usuarios = $db->select($sql, [$email]);
 
-    if(isset($lista_usuarios[$usuario->getEmail()])){
-        echo "Email já cadastrado";
-        header("Location: cadastro.php");
+    if(!empty($lista_usuarios)){
+        echo "<script><alert>Email já cadastrado</alert></script>";
+        header("Location: ../pages/cadastro.php");
         exit;
     } else {
-        $sqlInsert = "INSERT INTO usuarios VALUES(?, ?, ?)";
+        $sqlInsert = "INSERT INTO usuarios (email, nome, senha) VALUES(?, ?, ?)";
         $db->insert($sqlInsert, [$email, $nome, $senha]);
         header("Location: ../pages/login.php");
         exit;
