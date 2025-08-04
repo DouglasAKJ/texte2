@@ -1,21 +1,35 @@
 <?php
+require_once "../src/database/Database.php";
+require_once "../model/Usuario.php";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = $_POST['usuario'];
+    $email = $_POST['email'];
+    $nome = $_POST['nome'];
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
 
-    $arquivo = '../data/usuarios.json';
-    $dados = file_exists($arquivo) ? json_decode(file_get_contents($arquivo), true) : [];
+    $usuario = new Usuario($email, $nome, $senha);
 
-    if (isset($dados[$usuario])) {
-        //echo "⚠️ Nome de usuário já existe. <a href='../pages/cadastro.php'>Tente novamente</a>";
-        echo "<script> alert('Conta já existente. Tente novamente');
-            window.location.href = '../pages/cadastro.php';
-        </script>";
+    $db = new Database();
+
+    $sql = 'SELECT * FROM usuarios';
+
+    $lista_usuarios = $db->select($sql, [$email]);
+
+    if(isset($lista_usuarios[$usuario->getEmail()])){
+        echo "Email já cadastrado";
+        header("Location: cadastro.php");
+        exit;
+    } else {
+        $sqlInsert = "INSERT INTO usuarios VALUES(?, ?, ?)";
+        $db->insert($sqlInsert, [$email, $nome, $senha]);
+        header("Location: ../pages/login.php");
         exit;
     }
 
-    $dados[$usuario] = $senha;
-    file_put_contents($arquivo, json_encode($dados, JSON_PRETTY_PRINT));
-    header("Location: ../pages/login.php");
+    //$arquivo = '../data/usuarios.json';
+    //$dados = file_exists($arquivo) ? json_decode(file_get_contents($arquivo), true) : [];
+
+    
+
 }
 ?>

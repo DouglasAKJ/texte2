@@ -7,7 +7,8 @@
 <body>
   <h2>Cadastro de Usuário</h2>
   <form method="POST" action="../scripts/processa_cadastro.php">
-    <input type="text" name="usuario" placeholder="Usuário" required><br>
+    <input type="text" name="email" placeholder="Email" required><br>
+    <input type="text" name="nome" placeholder="Nome" required><br>
     <input type="password" name="senha" placeholder="Senha" required><br>
     <button type="submit">Cadastrar</button>
   </form>
