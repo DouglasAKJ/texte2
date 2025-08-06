@@ -1,10 +1,16 @@
 <?php
+require_once "../src/database/Database.php";
 session_start();
 if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
     exit;
 }
-$produtos = json_decode(file_get_contents('../data/produtos.json'), true);
+
+$db = new Database();
+
+$sql = "SELECT * FROM produtos";
+
+$produtos = $db->select($sql);
 ?>
 
 <!DOCTYPE html>
@@ -21,21 +27,19 @@ $produtos = json_decode(file_get_contents('../data/produtos.json'), true);
       <table cellpadding="10">
         <tr>
           <th>Produto</th>
-          <th>Categoria</th>
           <th>Preço</th>
           <th>Quantidade</th>
           <th></th>
         </tr>
         <?php foreach ($produtos as $p): ?>
           <tr>
-            <td><?php echo $p['nome']; ?></td>
-            <td><?php echo ucfirst($p['categoria']); ?></td>
-            <td>R$ <?php echo number_format($p['preco'], 2, ',', '.'); ?></td>
+            <td><?php echo $p->nome; ?></td>
+            <td>R$ <?php echo number_format($p->preco, 2, ',', '.'); ?></td>
             <td>
-              <input type="number" name="quantidade[<?php echo $p['id']; ?>]" value="1" min="1" style="width:50px;">
+              <input type="number" name="quantidade[<?php echo $p->id; ?>]" value="1" min="1" style="width:50px;">
             </td>
             <td>
-              <button type="submit" name="adicionar" value="<?php echo $p['id']; ?>">Adicionar</button>
+              <button type="submit" name="adicionar" value="<?php echo $p->id; ?>">Adicionar</button>
             </td>
           </tr>
         <?php endforeach; ?>

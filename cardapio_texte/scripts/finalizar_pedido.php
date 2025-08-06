@@ -1,12 +1,16 @@
-    <?php
+<?php
+require_once "../model/Produto.php";
+require_once "../model/Pedido.php";
 session_start();
+require_once "../src/database/Database.php";
 
+// ✅ 1. Verificações iniciais
 if (!isset($_SESSION['usuario']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../pages/login.php');
     exit;
 }
 
-$acao = $_POST['acao'];
+$acao = $_POST['acao'] ?? null;
 
 if ($acao === 'cancelar') {
     unset($_SESSION['carrinho']);
@@ -14,35 +18,66 @@ if ($acao === 'cancelar') {
     exit;
 }
 
+// ✅ 2. Coleta dados da sessão e POST
 $usuario = $_SESSION['usuario'];
 $carrinho = $_SESSION['carrinho'] ?? [];
-$entrega = $_POST['entrega'];
-$endereco = $_POST['endereco'] ?? '';
+$entrega = $_POST['entrega'] ?? null;
+$endereco = $entrega === 'delivery' ? ($_POST['endereco'] ?? '') : null;
 
 if (empty($carrinho)) {
     echo "⚠️ Carrinho vazio. <a href='../pages/menu.php'>Voltar</a>";
     exit;
 }
 
-$pedido = [
-    'usuario' => $usuario,
-    'itens' => $carrinho,
-    'entrega' => $entrega,
-    'endereco' => $entrega === 'delivery' ? $endereco : '',
-    'status' => 'Aguardando confirmação',
-    'data' => date('Y-m-d H:i:s')
-];
+// ✅ 3. Dados do pedido
+$nomePedido = "Pedido - " . date("Ymd-His");
+$dataPedido = date('Y-m-d H:i:s');
+$status = "Aguardando confirmação";
 
-$arquivoPedidos = '../data/pedidos.json';
-$pedidos = file_exists($arquivoPedidos) ? json_decode(file_get_contents($arquivoPedidos), true) : [];
+// ✅ 4. Conexão com banco
+$db = new Database();
+$conn = $db->getConnection();
 
-$pedidos[] = $pedido;
-file_put_contents($arquivoPedidos, json_encode($pedidos, JSON_PRETTY_PRINT));
+try {
+    $conn->beginTransaction();
 
-unset($_SESSION['carrinho']);
+    // ✅ 5. Inserir pedido na tabela `pedidos`
+    $stmt = $conn->prepare("INSERT INTO pedidos (nome, usuario_id, data, status) VALUES (?, ?, ?, ?)");
+    $stmt->execute([
+        $nomePedido,
+        $usuario['id'],
+        $dataPedido,
+        $status
+    ]);
 
-echo "
-<h1>✅ Pedido registrado com sucesso! <a href='../pages/menu.php'>Fazer novo pedido</a> | <a href='../pages/status.php'>Ver status</a></h1>;
-"
+    $pedidoId = $conn->lastInsertId();
 
+    // ✅ 6. Inserir produtos do pedido
+    $stmtItem = $conn->prepare("INSERT INTO pedido_produto (pedido_id, nome_produto, preco, quantidade) VALUES (?, ?, ?, ?)");
+
+    foreach ($carrinho as $produto) {
+        $stmtItem->execute([
+            $pedidoId,
+            $produto->getNome(),
+            $produto->getPreco(),
+            $produto->getQuantidade()
+        ]);
+    }
+
+    $conn->commit();
+
+    // ✅ 7. Limpar carrinho
+    unset($_SESSION['carrinho']);
+
+    // ✅ 8. Mensagem de sucesso
+    echo "
+        <h1>✅ Pedido registrado com sucesso!</h1>
+        <a href='../pages/menu.php'>Fazer novo pedido</a> | 
+        <a href='../pages/status.php'>Ver status</a>
+    ";
+
+} catch (PDOException $e) {
+    $conn->rollBack();
+    echo "❌ Erro ao registrar pedido: " . $e->getMessage();
+}
 ?>

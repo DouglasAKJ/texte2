@@ -1,11 +1,13 @@
 <?php
+
+require_once "../model/Produto.php";
 session_start();
 if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
     exit;
 }
 
-$carrinho = $_SESSION['carrinho'] ?? [];
+
 $total = 0.0;
 ?>
 
@@ -19,7 +21,7 @@ $total = 0.0;
   <div class="container-principal">
   <h2>🛒 Seu Carrinho</h2>
 
-  <?php if (empty($carrinho)): ?>
+  <?php if (!isset($_SESSION['carrinho']) || count($_SESSION['carrinho']) === 0): ?>
     <p>Seu carrinho está vazio.</p>
     <a href="menu.php">Voltar ao menu</a>
   <?php else: ?>
@@ -31,10 +33,10 @@ $total = 0.0;
           <th>Quantidade</th>
           <th>Subtotal</th>
         </tr>
-        <?php foreach ($carrinho as $item): 
-          $nome = $item['produto']['nome'];
-          $preco = $item['produto']['preco'];
-          $qtd = $item['quantidade'];
+        <?php foreach ($_SESSION['carrinho'] as $item): 
+          $nome = $item->getNome();
+          $preco = number_format($item->getPreco());
+          $qtd = $item->getQuantidade();
           $subtotal = $preco * $qtd;
           $total += $subtotal;
         ?>

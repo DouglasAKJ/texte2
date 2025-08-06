@@ -3,15 +3,15 @@ class Pedido{
     private $id;
     private $nome;
     private $usuario;
-    private $produto;
+    private $produtos;
     private $data;
     private $status;
 
 
-    public function __construct($nome, $usuario, $produto, $data, $status){
+    public function __construct($nome, $usuario, $produtos, $data, $status){
         $this->nome = $nome;
         $this->usuario = $usuario;
-        $this->produto = $produto;
+        $this->produtos = $produtos;
         $this->data = $data;
         $this->status = $status;
     }
@@ -40,12 +40,12 @@ class Pedido{
         $this->usuario = $usuario;
     }
 
-    public function getProduto(){
-        return $this->produto;
+    public function getProdutos(){
+        return $this->produtos;
     }
 
-    public function setProduto($produto){
-        $this->produto = $produto;
+    public function setProdutos($produtos){
+        $this->produtos = $produtos;
     }
 
     public function getData(){

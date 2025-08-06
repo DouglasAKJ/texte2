@@ -188,4 +188,10 @@ class Database {
         $this->disconnect();
    }
 
+   public function getConnection() {
+    $this->connect(); // Garante que a conexão esteja ativa
+    return $this->connection;
+}
+
+
 }
