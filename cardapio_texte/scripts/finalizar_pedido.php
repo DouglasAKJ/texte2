@@ -21,8 +21,14 @@ if ($acao === 'cancelar') {
 // ✅ 2. Coleta dados da sessão e POST
 $usuario = $_SESSION['usuario'];
 $carrinho = $_SESSION['carrinho'] ?? [];
-$entrega = $_POST['entrega'] ?? null;
-$endereco = $entrega === 'delivery' ? ($_POST['endereco'] ?? '') : null;
+$local = $_POST['entrega'];
+if (isset($_POST['entrega'])){
+    $endereco = $_POST['endereco'];
+    $db = new Database();
+    $db->update("UPDATE usuarios SET endereco = ? WHERE id = ?", [$endereco, $usuario['id']]);
+} else {
+    $endereco = null;
+}
 
 if (empty($carrinho)) {
     echo "⚠️ Carrinho vazio. <a href='../pages/menu.php'>Voltar</a>";
@@ -42,13 +48,16 @@ try {
     $conn->beginTransaction();
 
     // ✅ 5. Inserir pedido na tabela `pedidos`
-    $stmt = $conn->prepare("INSERT INTO pedidos (nome, usuario_id, data, status) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO pedidos (nome, usuario_id, data, status, local) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([
         $nomePedido,
         $usuario['id'],
         $dataPedido,
-        $status
+        $status,
+        $local
     ]);
+    
+
 
     $pedidoId = $conn->lastInsertId();
 
@@ -70,6 +79,7 @@ try {
     unset($_SESSION['carrinho']);
 
     // ✅ 8. Mensagem de sucesso
+    header("Location: ../pages/pedidoSucesso.php");
     echo "
         <h1>✅ Pedido registrado com sucesso!</h1>
         <a href='../pages/menu.php'>Fazer novo pedido</a> | 

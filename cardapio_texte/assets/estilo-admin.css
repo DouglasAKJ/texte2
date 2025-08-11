@@ -1,14 +1,26 @@
 /* ====== Painel Admin (Reforçado com a paleta) ====== */
 
 .card-pedido {
-  background-color: var(--preto);
-  border: 2px solid var(--laranja);
+  background-color: white;
+  border: 2px solid orange;
   border-radius: 12px;
   padding: 20px;
   margin: 25px auto;
   max-width: 650px;
   box-shadow: 0 4px 12px rgba(255, 111, 0, 0.3);
   transition: transform 0.2s, box-shadow 0.3s;
+}
+
+
+button {
+  background-color: orange;
+  color: var(--branco);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .centralizar{

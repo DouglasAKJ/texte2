@@ -49,6 +49,7 @@ $produtos = $db->select($sql);
     <br>
     <div class="botoes-inferiores">
       <button onclick="window.location.href='carrinho.php'"> 🛒 Ver Carrinho </button>
+      <button onclick="window.location.href='status.php'"> Pedidos </button>
       <button onclick="window.location.href='login.php?logout=1'"> Sair </button>
     </div>
   </main>

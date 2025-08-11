@@ -56,7 +56,8 @@ form {
 }
 
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="number"] {
   padding: 10px;
   border: 1px solid var(--laranja);
   border-radius: 5px;

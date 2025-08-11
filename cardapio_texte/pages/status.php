@@ -1,55 +1,73 @@
 <?php
+require_once "../src/database/Database.php";
+require_once "../model/Produto.php";
 session_start();
+
 if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
     exit;
 }
 
-$usuario = $_SESSION['usuario'];
-$arquivoPedidos = '../data/pedidos.json';
-$pedidos = file_exists($arquivoPedidos) ? json_decode(file_get_contents($arquivoPedidos), true) : [];
+$usuarioSessao = $_SESSION['usuario'];
+$usuarioId = $usuarioSessao['id'];
 
-$meusPedidos = array_filter($pedidos, fn($p) => $p['usuario'] === $usuario);
+$db = new Database();
+
+// Buscar dados completos do usuário, incluindo endereço
+$usuario = $db->select("SELECT * FROM usuarios WHERE id = $usuarioId");
+$usuarioObj = isset($usuario[0]) ? $usuario[0] : null;
+
+// Buscar pedidos do usuário
+$pedidos = $db->select("SELECT * FROM pedidos WHERE usuario_id = $usuarioId ORDER BY data DESC");
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="../assets/estilo-status.css">
-  <title>Status dos Pedidos</title>
+    <meta charset="UTF-8">
+    <title>Status dos Pedidos</title>
+    <link rel="stylesheet" href="../assets/estilo-status.css">
 </head>
 <body>
-  <div class="pedido">
-  <h2>📦 Pedidos de <?php echo htmlspecialchars($usuario); ?></h2>
+    <div class="container">
+        <h1>📋 Seus Pedidos</h1>
+        <a href="menu.php">Voltar ao Menu</a><br><br>
 
-  <?php if (empty($meusPedidos)): ?>
-    <p>Você ainda não fez nenhum pedido.</p>
-    <a href="menu.php">📋 Fazer Pedido</a>
-  <?php else: ?>
-    <?php foreach (array_reverse($meusPedidos) as $index => $pedido): ?>
-      <div style="border:1px solid #ccc; margin: 15px; padding: 15px; max-width: 500px; margin-left:auto; margin-right:auto;">
-        <strong>Data:</strong> <?= $pedido['data'] ?><br>
-        <strong>Tipo:</strong> <?= $pedido['entrega'] === 'delivery' ? 'Delivery' : 'Consumo Local' ?><br>
-        <?php if (!empty($pedido['endereco'])): ?>
-          <strong>Endereço:</strong> <?= htmlspecialchars($pedido['endereco']) ?><br>
+        <?php if (empty($pedidos)): ?>
+            <p>⚠️ Você ainda não fez nenhum pedido.</p>
+        <?php else: ?>
+            <?php foreach ($pedidos as $pedido): ?>
+                <div class="pedido">
+                    <h3><?= htmlspecialchars($pedido->nome) ?></h3>
+                    <strong>Data:</strong> <?= date('d/m/Y H:i', strtotime($pedido->data)) ?><br>
+                    
+                    <?php if (!empty($usuarioObj) && !empty($usuarioObj->endereco)): ?>
+                        <strong>Endereço:</strong> <?= htmlspecialchars($usuarioObj->endereco) ?><br>
+                    <?php endif; ?>
+                    
+                    <strong>Status atual:</strong> <?= htmlspecialchars($pedido->status) ?><br>
+
+                    <?php
+                    // Buscar produtos do pedido
+                    $pedidoId = $pedido->id;
+                    $produtos = $db->select("SELECT * FROM pedido_produto WHERE pedido_id = $pedidoId");
+                    ?>
+
+                    <h4>Produtos:</h4>
+                    <ul>
+                        <?php foreach ($produtos as $produto): ?>
+                            <li>
+                                <?= htmlspecialchars($produto->nome_produto) ?> 
+                                (<?= $produto->quantidade ?>x) 
+                                - R$ <?= number_format($produto->preco, 2, ',', '.') ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <hr>
+            <?php endforeach; ?>
         <?php endif; ?>
-        <strong>Status:</strong> <?= $pedido['status'] ?><br><br>
-
-        <u>Itens:</u>
-        <ul style="text-align:left;">
-          <?php foreach ($pedido['itens'] as $item): ?>
-            <li>
-              <?= $item['quantidade'] ?> × <?= $item['produto']['nome'] ?> —
-              R$ <?= number_format($item['produto']['preco'], 2, ',', '.') ?>
-            </li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-    <?php endforeach; ?>
-  <?php endif; ?>
-
-  
-  </div>
-  <a href="menu.php">🍔 Voltar ao Menu</a>
+    </div>
 </body>
 </html>

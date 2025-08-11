@@ -1,22 +1,31 @@
 <?php
 session_start();
+if (!isset($_SESSION['usuarioAdmin'])) {
+    header('Location: loginAdmin.php');
+    exit;
+}
 
-// Aqui você pode adicionar uma verificação extra para permitir acesso apenas a "admins"
-$arquivoPedidos = '../data/pedidos.json';
-$pedidos = file_exists($arquivoPedidos) ? json_decode(file_get_contents($arquivoPedidos), true) : [];
+
+require_once "../src/database/Database.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $index = $_POST['index'];
     $novoStatus = $_POST['status'];
 
+    $db = new Database();
+    $pedidos = $db->select("SELECT * FROM pedidos");
+
     if (isset($pedidos[$index])) {
-        $pedidos[$index]['status'] = $novoStatus;
-        file_put_contents($arquivoPedidos, json_encode($pedidos, JSON_PRETTY_PRINT));
+        $pedidoId = $pedidos[$index]->id;
+
+        // Evitar SQL injection com prepared statements (se suportado)
+        $db->update("UPDATE pedidos SET status = ? WHERE id = ?", [$novoStatus, $pedidoId]);
     }
 
     header('Location: admin.php');
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -28,37 +37,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <div class="centralizar">
   <h2>🧾 Painel de Pedidos</h2>
+    <button onclick="window.location.href = 'cadastroProduto.php'"> Cadastrar Produto </button>
   </div>
 
-  <?php if (empty($pedidos)): ?>
+
+
+  <?php
+   $db = new Database();
+   $sql = "SELECT * FROM pedidos";
+   $pedidos = $db->select($sql);
+  
+        if (empty($pedidos)): ?>
     <p>Nenhum pedido registrado.</p>
   <?php else: ?>
-    <?php foreach (array_reverse($pedidos, true) as $i => $pedido): ?>
+    <?php foreach ($pedidos as $i => $pedido): ?>
       <div class="card-pedido">
-        <strong>Cliente:</strong> <?= htmlspecialchars($pedido['usuario']) ?><br>
-        <strong>Data:</strong> <?= $pedido['data'] ?><br>
-        <strong>Tipo:</strong> <?= $pedido['entrega'] ?><br>
-        <?php if (!empty($pedido['endereco'])): ?>
-          <strong>Endereço:</strong> <?= htmlspecialchars($pedido['endereco']) ?><br>
+        <?php 
+          $usuario_id = $pedido->usuario_id;
+          $usuario = $db->select("SELECT * FROM usuarios WHERE id = $usuario_id");
+          $nomeUsuario = isset($usuario[0]->nome) ? $usuario[0]->nome : 'Desconhecido';
+        ?>
+        <strong>Cliente:</strong> <?=htmlspecialchars($nomeUsuario) ?><br>
+        <strong>Data:</strong> <?= $pedido->data?><br>
+        <strong>Local:</strong> <?= $pedido->local?><br>
+        <?php if (!empty($usuario[0]->endereco)): ?>
+          <strong>Endereço:</strong> <?= htmlspecialchars($usuario[0]->endereco) ?><br>
         <?php endif; ?>
-        <strong>Status atual:</strong> <?= $pedido['status'] ?><br>
+        <strong>Status atual:</strong> <?= $pedido->status ?><br>
 
         <form method="POST" style="margin-top: 10px;">
           <input type="hidden" name="index" value="<?= $i ?>">
           <select name="status">
-            <option <?= $pedido['status'] === 'Aguardando confirmação' ? 'selected' : '' ?>>Aguardando confirmação</option>
-            <option <?= $pedido['status'] === 'Em preparo' ? 'selected' : '' ?>>Em preparo</option>
-            <option <?= $pedido['status'] === 'Saiu para entrega' ? 'selected' : '' ?>>Saiu para entrega</option>
-            <option <?= $pedido['status'] === 'Finalizado' ? 'selected' : '' ?>>Finalizado</option>
-            <option <?= $pedido['status'] === 'Cancelado' ? 'selected' : '' ?>>Cancelado</option>
+            <option <?= $pedido->status === 'Aguardando confirmação' ? 'selected' : '' ?>>Aguardando confirmação</option>
+            <option <?= $pedido->status === 'Em preparo' ? 'selected' : '' ?>>Em preparo</option>
+            <option <?= $pedido->status === 'Saiu para entrega' ? 'selected' : '' ?>>Saiu para entrega</option>
+            <option <?= $pedido->status === 'Finalizado' ? 'selected' : '' ?>>Finalizado</option>
+            <option <?= $pedido->status === 'Cancelado' ? 'selected' : '' ?>>Cancelado</option>
           </select>
           <button type="submit">Atualizar</button>
         </form>
 
         <hr>
         <ul style="text-align:left;">
-          <?php foreach ($pedido['itens'] as $item): ?>
-            <li><?= $item['quantidade'] ?>× <?= $item['produto']['nome'] ?> (R$ <?= number_format($item['produto']['preco'], 2, ',', '.') ?>)</li>
+          <?php 
+            $pedido_id = $pedido->id;
+            $itens = $db->select("SELECT * FROM pedido_produto WHERE pedido_id = $pedido_id");
+          ?>
+          <?php foreach ($itens as $item): ?>
+            <li><?= $item->quantidade ?> <?= $item->nome_produto ?> (R$ <?= number_format($item->preco, 2, ',', '.') ?>)</li>
           <?php endforeach; ?>
         </ul>
         
